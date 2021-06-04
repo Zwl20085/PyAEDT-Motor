@@ -52,7 +52,8 @@ project_file = os.path.join(project_dir, project_name + ".aedt")
 
 ################################################################
 # Launch Electronics Desktop and Initialize HFSS app the command
-# Initializes the HFSS Design in AEDT. if there is a running HFSS Design the aedtapp will be linked to it, otherwise a new design will be run.
+# Initializes the HFSS Design in AEDT. if there is a running HFSS Design the
+# aedtapp will be linked to it, otherwise a new design will be run.
 
 
 desktop=Desktop(desktopVersion, NonGraphical, NewThread)
@@ -60,7 +61,8 @@ aedtapp = Hfss()
 
 ################################################################
 # Variables Settings
-# A variable can be initialized simpy by creating it as a list object. if user enter $ then the variable will be created for project otherwise for design.
+# A variable can be initialized simpy by creating it as a list object. if user enter $
+# then the variable will be created for project otherwise for design.
 
 
 aedtapp["$coax_dimension"] = "100mm"
@@ -71,7 +73,8 @@ aedtapp["inner"] = "3mm"
 ################################################################
 # Modeler
 # Create the Coaxial, 3 Cylinders.
-# Parameters can be applied directly to create_cylinder method, also material can be assigned directly to the object creation action.
+# Parameters can be applied directly to create_cylinder method,
+# also material can be assigned directly to the object creation action.
 # Alternatively the material can be assigned usign assignmaterial function
 
 
@@ -97,7 +100,8 @@ aedtapp.modeler.subtract(id2, id1, True)
 
 
 aedtapp.mesh.assign_initial_mesh_from_slider(6)
-aedtapp.mesh.assign_model_resolution([aedtapp.modeler.primitives.get_obj_name(id1), aedtapp.modeler.primitives.get_obj_name(id3)], None)
+aedtapp.mesh.assign_model_resolution([aedtapp.modeler.primitives.get_obj_name(id1),
+                                      aedtapp.modeler.primitives.get_obj_name(id3)], None)
 aedtapp.mesh.assign_length_mesh(aedtapp.modeler.primitives.get_object_faces(id2), False, 1, 2000)
 
 ################################################################
@@ -132,13 +136,16 @@ ipkapp.copy_solid_bodies_from(aedtapp)
 
 
 surfaceobj = ["inner", "outer"]
-ipkapp.assign_em_losses(aedtapp.design_name, "MySetup", "LastAdaptive", "1GHz", surfaceobj, paramlist=["$coax_dimension","inner"])
+ipkapp.assign_em_losses(aedtapp.design_name, "MySetup", "LastAdaptive",
+                        "1GHz", surfaceobj, paramlist=["$coax_dimension","inner"])
 ipkapp.edit_design_settings(aedtapp.GravityDirection.ZNeg)
 
 ################################################################
 # Setup Project in Icepak
 # When you create a setup, default settings will be applied
-# When you need to change a property of the setup you can use props command and pass the right value to the property value. The update function will apply the settings to the setup
+# When you need to change a property of the setup you can use props command
+# and pass the right value to the property value. The update function will apply
+# the settings to the setup.
 
 
 setup_ipk = ipkapp.create_setup("SetupIPK")
@@ -155,7 +162,8 @@ ipkapp.assign_openings(airfaces)
 
 ################################################################
 # Cloase and Open Projects
-# This command shows how to save, close and load projects. This can be helpful in case of operations on multiple projects.
+# This command shows how to save, close and load projects.
+# This can be helpful in case of operations on multiple projects.
 
 aedtapp.save_project()
 aedtapp.close_project(project_name)
@@ -177,7 +185,7 @@ aedtapp.analyze_setup("MySetup")
 ################################################################
 # Plot and Export
 # Generating images and Field Plots
-#This section we generate Field Plots on HFSS Projects and we export it as an image
+# This section we generate Field Plots on HFSS Projects and we export it as an image
 
 cutlist = ["Global:XY", "Global:XZ", "Global:YZ"]
 vollist = [aedtapp.modeler.primitives.get_obj_name(id2)]
@@ -200,7 +208,11 @@ import time
 start = time.time()
 cutlist = ["Global:XY"]
 phases=[str(i*5)+"deg" for i in range(18)]
-aedtapp.post.animate_fields_from_aedtplt_2(quantityname="Mag_E",object_list=cutlist,plottype="CutPlane",meshplot=False, setup_name=aedtapp.nominal_adaptive,intrinsic_dict={"Freq":"1GHz", "Phase":"0deg"},project_path=results_folder, variation_variable="Phase",variation_list=phases, off_screen=True,export_gif=True)
+aedtapp.post.animate_fields_from_aedtplt_2(quantityname="Mag_E",object_list=cutlist,plottype="CutPlane",
+                                           meshplot=False, setup_name=aedtapp.nominal_adaptive,
+                                           intrinsic_dict={"Freq":"1GHz", "Phase":"0deg"},
+                                           project_path=results_folder, variation_variable="Phase",
+                                           variation_list=phases, off_screen=True,export_gif=True)
 endtime = time.time() - start
 print("Total Time", endtime)
 
@@ -215,7 +227,8 @@ intrinsic = ""
 surflist = ipkapp.modeler.primitives.get_object_faces("inner")
 plot5 = ipkapp.post.create_fieldplot_surface(surflist, "SurfTemperature")
 
-ipkapp.post.plot_field_from_fieldplot(plot5.name, project_path=results_folder, meshplot=False, setup_name=setup_name, imageformat="jpg", view="iso")
+ipkapp.post.plot_field_from_fieldplot(plot5.name, project_path=results_folder, meshplot=False, setup_name=setup_name,
+                                      imageformat="jpg", view="iso")
 
 aedtapp.save_project()
 
