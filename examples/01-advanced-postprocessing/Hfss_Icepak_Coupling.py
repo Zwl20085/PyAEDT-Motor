@@ -6,28 +6,10 @@ This Example shows how to create a full project from scratch in HFSS and Icepak 
 a setup, solves it and create post processing output. It includes a lot of commands to show pyaedt Capabilitiesn
 """
 
-
-
 import os
 import sys
 import pathlib
-import glob
-from IPython.display import Image
-
-local_path = os.path.abspath('')
-module_path = pathlib.Path(local_path)
-aedt_lib_path = module_path.parent.parent.parent
-pdf_path1 =  os.path.join(aedt_lib_path, "pyaedt", "core", "Dlls", "PDFReport")
-sys.path.append(os.path.join(module_path))
-sys.path.append(os.path.join(aedt_lib_path))
-sys.path.append(os.path.join(pdf_path1))
 from pyaedt import generate_unique_name
-project_dir = os.path.join(os.environ["TEMP"], generate_unique_name("Example"))
-if not os.path.exists(project_dir): os.makedirs(project_dir)
-print(project_dir)
-
-
-
 from pyaedt import Hfss
 from pyaedt import Icepak
 from pyaedt import Desktop
@@ -36,6 +18,19 @@ import numpy as np
 import matplotlib.pyplot as plt
 import math
 advanced = True
+import glob
+from IPython.display import Image
+
+local_path = os.path.abspath('')
+module_path = pathlib.Path(local_path)
+aedt_lib_path = module_path.parent.parent.parent
+pdf_path1 = os.path.join(aedt_lib_path, "pyaedt", "core", "Dlls", "PDFReport")
+sys.path.append(os.path.join(module_path))
+sys.path.append(os.path.join(aedt_lib_path))
+sys.path.append(os.path.join(pdf_path1))
+project_dir = os.path.join(os.environ["TEMP"], generate_unique_name("Example"))
+if not os.path.exists(project_dir): os.makedirs(project_dir)
+print(project_dir)
 
 
 ################################################################
