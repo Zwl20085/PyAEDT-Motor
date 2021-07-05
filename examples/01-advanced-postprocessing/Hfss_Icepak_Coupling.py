@@ -18,8 +18,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import math
 advanced = True
-import glob
-from IPython.display import Image
 
 local_path = os.path.abspath('')
 module_path = pathlib.Path(local_path)
