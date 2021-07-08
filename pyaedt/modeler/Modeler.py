@@ -2353,8 +2353,8 @@ class GeometryModeler(Modeler, object):
 
         Parameters
         ----------
-        startingposition : Position
-            starting Position
+        startingposition : Position, list
+            starting Position - e.g. [0,0,0]
         axis :
             CoordinateSystemaxis
         innerradius :
@@ -2376,6 +2376,15 @@ class GeometryModeler(Modeler, object):
         -------
         type
             inner ID, outer ID, diel ID
+
+        Examples
+        --------
+        >>> from pyaedt import Hfss
+        >>> app = Hfss()
+        >>> app['len1']='10mm'
+        >>> app['id1']='2mm'
+        >>> app['od1']='4mm'
+        >>> app.modeler.create_coaxial([0,0,0],innerradius='id1', length='len1', axis='z')
 
         """
 
