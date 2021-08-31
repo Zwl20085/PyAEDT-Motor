@@ -239,3 +239,245 @@ class Primitives2D(Primitives, object):
         else:
             pad_percent = [pad_percent[0], pad_percent[1], 0, pad_percent[2], pad_percent[3], 0]
         return Primitives.create_region(self, pad_percent)
+
+    @aedt_exception_handler
+    def create_Arc(self,_var_center,_var_start,_var_arc,_var_Name):
+        new_object_name=self.oeditor.CreatePolyline(
+           [
+                "NAME:PolylineParameters",
+                "IsPolylineCovered:="	, True,
+                "IsPolylineClosed:="	, False,
+               [
+                    "NAME:PolylinePoints",
+                   [
+                        "NAME:PLPoint",
+                        "X:="			, _var_start[0],
+                        "Y:="			, _var_start[1],
+                        "Z:="			, "0mm"
+                        ],
+                    [
+                        "NAME:PLPoint",
+                        "X:="			, "100mm",
+                        "Y:="			, "0mm",
+                        "Z:="			, "0mm"
+                    ],
+                    [
+                        "NAME:PLPoint",
+                        "X:="			, "0mm",
+                        "Y:="			, "0mm",
+                        "Z:="			, "0mm"
+                    ]
+                ],
+                [
+                    "NAME:PolylineSegments",
+                    [
+                        "NAME:PLSegment",
+                        "SegmentType:="		, "AngularArc",
+                        "StartIndex:="		, 0,
+                        "NoOfPoints:="		, 3,
+                        "NoOfSegments:="	, "0",
+                        "ArcAngle:="		, _var_arc,
+                        "ArcCenterX:="		, _var_center[0],
+                        "ArcCenterY:="		, _var_center[1],
+                        "ArcCenterZ:="		, "0mm",
+                        "ArcPlane:="		, "XY"
+                    ]
+                ],
+                [
+                    "NAME:PolylineXSection",
+                    "XSectionType:="	, "None",
+                    "XSectionOrient:="	, "Auto",
+                    "XSectionWidth:="	, "0mm",
+                    "XSectionTopWidth:="	, "0mm",
+                    "XSectionHeight:="	, "0mm",
+                    "XSectionNumSegments:="	, "0",
+                    "XSectionBendType:="	, "Corner"
+                ]
+            ], 
+            [
+                "NAME:Attributes",
+                "Name:="		, _var_Name,
+                "Flags:="		, "",
+                "Color:="		, "(143 175 143)",
+                "Transparency:="	, 0,
+                "PartCoordinateSystem:=", "Global",
+                "UDMId:="		, "",
+                "MaterialValue:="	, "\"vacuum\"",
+                "SurfaceMaterialValue:=", "\"\"",
+                "SolveInside:="		, True,
+                "IsMaterialEditable:="	, True,
+                "UseMaterialAppearance:=", False,
+                "IsLightweight:="	, False
+            ])
+        return self._create_object(new_object_name)
+
+    def create_Line(self, _var_start, _var_end,_var_Name):
+        new_object_name=self.oeditor.CreatePolyline(
+            [
+                "NAME:PolylineParameters",
+                "IsPolylineCovered:="    , True,
+                "IsPolylineClosed:="    , False,
+                [
+                    "NAME:PolylinePoints",
+                    [
+                        "NAME:PLPoint",
+                        "X:="            ,  _var_start[0],
+                        "Y:="            , _var_start[1],
+                        "Z:="            , "0mm"
+                    ],
+                    [
+                        "NAME:PLPoint",
+                        "X:="            ,  _var_end[0],
+                        "Y:="            ,  _var_end[1],
+                        "Z:="            , "0mm"
+                    ]
+                ],
+                [
+                    "NAME:PolylineSegments",
+                    [
+                        "NAME:PLSegment",
+                        "SegmentType:="        , "Line",
+                        "StartIndex:="        , 0,
+                        "NoOfPoints:="        , 2
+                    ]
+                ],
+                [
+                    "NAME:PolylineXSection",
+                    "XSectionType:="    , "None",
+                    "XSectionOrient:="    , "Auto",
+                    "XSectionWidth:="    , "0mm",
+                    "XSectionTopWidth:="    , "0mm",
+                    "XSectionHeight:="    , "0mm",
+                    "XSectionNumSegments:="    , "0",
+                    "XSectionBendType:="    , "Corner"
+                ]
+            ], 
+            [
+                "NAME:Attributes",
+                "Name:="        , _var_Name,
+                "Flags:="        , "",
+                "Color:="        , "(143 175 143)",
+                "Transparency:="    , 0,
+                "PartCoordinateSystem:=", "Global",
+                "UDMId:="        , "",
+                "MaterialValue:="    , "\"vacuum\"",
+                "SurfaceMaterialValue:=", "\"\"",
+                "SolveInside:="        , True,
+                "IsMaterialEditable:="    , True,
+                "UseMaterialAppearance:=", False,
+                "IsLightweight:="    , False
+            ])
+        return self._create_object(new_object_name)
+
+    def cover(self,_var_Name):
+        new_object_name=self.oeditor.CoverLines(
+        [
+                "NAME:Selections",
+                "Selections:="		, _var_Name,
+                "NewPartsModelFlag:="	, "Model"
+            ])
+        return self._create_object(new_object_name)
+
+    def Myunite(self,_var_Name):
+        new_object_name=self.oeditor.Unite(
+            [
+                "NAME:Selections",
+                "Selections:="		, _var_Name
+            ], 
+            [
+                "NAME:UniteParameters",
+                "KeepOriginals:="   , False
+            ])
+
+    def change_PartName(self,_var_Name_Last,_var_Name_Now):
+        self.oeditor.ChangeProperty(
+            [
+                "NAME:AllTabs",
+                [
+                    "NAME:Geometry3DAttributeTab",
+                    [
+                        "NAME:PropServers", 
+                        _var_Name_Last
+                    ],
+                    [
+                        "NAME:ChangedProps",
+                        [
+                            "NAME:Name",
+                            "Value:="        , _var_Name_Now
+                        ]
+                    ]
+                ]
+            ])
+        KK = self.add_new_objects()
+
+        return self.get_object_from_name(KK[0])
+        
+    def change_Colour(self,_var_Name,_var_Color):
+        if _var_Color == "r":#manjianghong
+            RR = 167
+            GG = 83
+            BB = 90
+        if _var_Color == "g":#Jialingshuilv
+            RR = 173
+            GG = 213
+            BB = 162
+        if _var_Color == "b":
+            RR = 47
+            GG = 144
+            BB = 185
+        if _var_Color == "y":
+            RR = 183
+            GG = 141
+            BB = 18
+        if _var_Color == "k":
+            RR = 57
+            GG = 55
+            BB = 51
+        if _var_Color == "iron": #wahui
+            RR = 134
+            GG = 126
+            BB = 118
+        new_object_name=self.oeditor.ChangeProperty(
+            [
+
+               "NAME:AllTabs",
+                [
+                    "NAME:Geometry3DAttributeTab",
+                    [
+                         "NAME:PropServers", 
+                         _var_Name
+                    ],
+                    [
+                        "NAME:ChangedProps",
+                         [
+                             "NAME:Color",
+                             "R:="            , RR,
+                             "G:="            , GG,
+                             "B:="            , BB
+                        ]
+                    ]
+                ]
+            ])
+        KK = self.add_new_objects()
+
+    def Set_Material(self,_var_Name,_var_Material):
+        K = "\""+_var_Material+"\""
+        self.oeditor.AssignMaterial(
+            [
+                "NAME:Selections",
+                "AllowRegionDependentPartSelectionForPMLCreation:=", True,
+                "AllowRegionSelectionForPMLCreation:=", True,
+                "Selections:="        , _var_Name
+            ], 
+            [
+                "NAME:Attributes",
+                "MaterialValue:="    , K,
+                "SolveInside:="        , True,
+                "IsMaterialEditable:="    , True,
+                "UseMaterialAppearance:=", False,
+                "IsLightweight:="    , False
+            ])
+
+
+
+
