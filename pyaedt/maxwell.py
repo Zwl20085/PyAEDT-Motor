@@ -62,8 +62,8 @@ def float_units(val_str, units=""):
     Parameters
     ----------
     val_str : str
-        Name of the float value.
-
+        Name of the float value.  
+        
     units : str, optional
          The default is ``""``.
 
@@ -109,18 +109,18 @@ class Maxwell(object):
         nothing is used.
     specified_version: str, optional
         Version of AEDT to use. The default is ``None``, in which case
-        the active version or latest installed version is used. This parameter is ignored when Script is launched within AEDT.
+        the active version or latest installed version is used.
     NG : bool, optional
         Whether to launch AEDT in the non-graphical mode. The default
-        is ``False``, in which case AEDT is launched in the graphical mode. This parameter is ignored when Script is launched within AEDT.
+        is ``False``, in which case AEDT is launched in the graphical mode.
     AlwaysNew : bool, optional
         Whether to launch an instance of AEDT in a new thread, even if
         another instance of the ``specified_version`` is active on the
-        machine. The default is ``True``. This parameter is ignored when Script is launched within AEDT.
+        machine. The default is ``True``.
     release_on_exit : bool, optional
         Whether to release AEDT on exit. The default is ``False``.
     student_version : bool, optional
-        Whether to open the AEDT student version. The default is ``False``. This parameter is ignored when Script is launched within AEDT.
+        Whether to open the AEDT student version. The default is ``False``.
 
     """
 
@@ -243,7 +243,7 @@ class Maxwell(object):
         Parameters
         ----------
         object_list : list
-            List of objects.
+            List of objects.    
         activate : bool, optional
             Whether to activate eddy effects. The default is ``True``.
 
@@ -251,7 +251,7 @@ class Maxwell(object):
         -------
         bool
             ``True`` when successful and ``False`` when failed.
-
+        
         """
         EddyVector = ["NAME:EddyEffectVector"]
         for obj in object_list:
@@ -269,7 +269,7 @@ class Maxwell(object):
     def assign_current(self, object_list, amplitude=1, phase="0deg", solid=True, swap_direction=False,
                        name=None):
         """Assign the source of the current.
-
+        
         Parameters
         ----------
         object_list : list
@@ -295,7 +295,7 @@ class Maxwell(object):
 
         if not name:
             name = generate_unique_name("Current")
-
+        
         object_list = self.modeler._convert_list_to_ids(object_list)
         if self.is3d:
             if type(object_list[0]) is int:
@@ -380,8 +380,7 @@ class Maxwell(object):
             name = generate_unique_name("VoltageDrop")
         face_list = self.modeler._convert_list_to_ids(face_list)
 
-        props = OrderedDict({"Faces": face_list, "Voltage Drop": amplitude,
-                            "Point out of terminal": swap_direction})
+        props = OrderedDict({"Faces": face_list, "Voltage Drop": amplitude, "Point out of terminal": swap_direction})
         bound = BoundaryObject(self, name, props, "VoltageDrop")
         if bound.create():
             self.boundaries.append(bound)
@@ -389,7 +388,7 @@ class Maxwell(object):
         return False
 
     @aedt_exception_handler
-    def assign_winding(self, coil_terminals=None, winding_type="Current", is_solid=True, current_value=1, res=0, ind=0, voltage=0,
+    def assign_winding(self, coil_terminals=None, winding_type="Current", current_value="1", res=0, ind=0, voltage=0,
                        parallel_branches=1, name=None):
         """Assign a winding to a Maxwell design.
 
@@ -399,10 +398,8 @@ class Maxwell(object):
             List of faces to create the coil terminal on.
             The default is ``None``.
         winding_type : str, optional
-            Type of the winding. Options are ``"Current"``, ``"Voltage"``,
+            Type of the winding. Options are ``"Current"``, ``"Voltage"``, 
             and ``"External"``. The default is ``"Current"``.
-        is_solid : bool, optional
-            Type of the winding.  ``True`` is solid, ``False`` is stranded. The default is ``True``.
         current_value : float, optional
             Value of the current in amperes. The default is ``1``.
         res : float, optional
@@ -426,7 +423,7 @@ class Maxwell(object):
         if not name:
             name = generate_unique_name("Winding")
 
-        props = OrderedDict({"Type": winding_type, "IsSolid": is_solid, "Current": str(current_value) + "A",
+        props = OrderedDict({"Type": winding_type, "IsSolid": False, "Current": str(current_value) + "A",
                              "Resistance": str(res) + "ohm", "Inductance": str(ind) + "H",
                              "Voltage": str(voltage) + "V", "ParallelBranchesNum": str(parallel_branches)})
         bound = BoundaryObject(self, name, props, "Winding")
@@ -458,7 +455,7 @@ class Maxwell(object):
         Returns
         -------
         bool
-            ``True`` when successful, ``False`` when failed.
+            ``True`` when successful, ``False`` when failed.   
 
         """
         if self.modeler._is3d:
@@ -468,7 +465,7 @@ class Maxwell(object):
         return True
 
     @aedt_exception_handler
-    def assign_coil(self, input_object, conductor_number=1, polarity="Positive", name=None):
+    def assign_coil(self, input_object, conductor_number="1", polarity="Positive", name=None):
         """Assign coils to a list of objects or face IDs.
 
         Parameters
@@ -478,7 +475,7 @@ class Maxwell(object):
         conductor_number : int, optional
             Number of conductors. The default is ``1``.
         polarity : str, optional
-            Type of the polarity. The default is ``"Positive"``.
+            Type of the polarity. The default is ``"Positive"``.         
         name : str, optional
              The default is ``None``.
 
@@ -514,8 +511,7 @@ class Maxwell(object):
                 bound = BoundaryObject(self, name, props2, "CoilTerminal")
 
             else:
-                self._messenger.add_warning_message(
-                    "Face Selection is not allowed in Maxwell 2D. Provide a 2D object.")
+                self._messenger.add_warning_message("Face Selection is not allowed in Maxwell 2D. Provide a 2D object.")
                 return False
         if bound.create():
             self.boundaries.append(bound)
@@ -541,7 +537,7 @@ class Maxwell(object):
         -------
         bool
             ``True`` when successful, ``False`` when failed.
-
+        
         """
         input_object = self.modeler._convert_list_to_ids(input_object, True)
         if not force_name:
@@ -574,7 +570,7 @@ class Maxwell(object):
         reference_cs : str, optional
             Name of the reference coordinate system. The default is ``"Global"``.
         is_positive : bool, optional
-            Whether the torque is positive. The default is ``True``.
+            Whether the torque is positive. The default is ``True``. 
         is_virtual : bool, optional
             Whether the torque is virtual. The default is ``True``.
         axis : str, optional
@@ -586,7 +582,7 @@ class Maxwell(object):
         -------
         bool
             ``True`` when successful, ``False`` when failed.
-
+        
         """
         input_object = self.modeler._convert_list_to_ids(input_object, True)
         if not torque_name:
@@ -620,7 +616,7 @@ class Maxwell(object):
         -------
         bool
             ``True`` when successful, ``False`` when failed.
-
+        
         """
         input_object = self.modeler._convert_list_to_ids(input_object, True)
         if not force_name:
@@ -641,7 +637,7 @@ class Maxwell(object):
         Parameters
         ----------
         name : str
-
+            
         activate : bool, optional
             The default value is ``True``.
 
@@ -649,7 +645,7 @@ class Maxwell(object):
         -------
         bool
             ``True`` when successful, ``False`` when failed.
-
+            
         """
         self.modeler.primitives[name].solve_inside = activate
         return True
@@ -657,12 +653,12 @@ class Maxwell(object):
     @aedt_exception_handler
     def analyze_from_zero(self):
         """Analyze from zero.
-
+        
         Returns
         -------
         bool
             ``True`` when successful, ``False`` when failed.
-
+        
         """
         self.oanalysis.ResetSetupToTimeZero(self._setup)
         self.analyze_nominal()
@@ -715,7 +711,7 @@ class Maxwell(object):
 
 
 class Maxwell3d(Maxwell, FieldAnalysis3D, object):
-    """Provides the Maxwell 3D application interface.
+    """Maxwell 3D application interface.
 
     This class allows you to connect to an existing Maxwell 3D design or create a
     new Maxwell 3D design if one does not exist.
@@ -740,33 +736,31 @@ class Maxwell3d(Maxwell, FieldAnalysis3D, object):
         nothing is used.
     specified_version: str, optional
         Version of AEDT to use. The default is ``None``, in which case
-        the active version or latest installed version is used. This parameter is ignored when Script is launched within AEDT.
+        the active version or latest installed version is used.
     NG : bool, optional
         Whether to launch AEDT in the non-graphical mode. The default
-        is ``False``, in which case AEDT is launched in the graphical mode. This parameter is ignored when Script is launched within AEDT.
+        is ``False``, in which case AEDT is launched in the graphical mode.
     AlwaysNew : bool, optional
         Whether to launch an instance of AEDT in a new thread, even if
         another instance of the ``specified_version`` is active on the
-        machine. The default is ``True``. This parameter is ignored when Script is launched within AEDT.
+        machine. The default is ``True``.
     release_on_exit : bool, optional
         Whether to release AEDT on exit. The default is ``False``.
      student_version : bool, optional
-        Whether to open the AEDT student version. The default is ``False``. This parameter is ignored when Script is launched within AEDT.
+        Whether to open the AEDT student version. The default is ``False``.
 
     Examples
     --------
     Create an instance of Maxwell 3D and open the specified
-    project, which is named ``mymaxwell.aedt``.
+    project, which is named ``myfile.aedt``.
 
     >>> from pyaedt import Maxwell3d
-    >>> aedtapp = Maxwell3d("mymaxwell.aedt")
-    pyaedt Info: Added design ...
+    >>> aedtapp = Maxwell3d("myfile.aedt")
 
     Create an instance of Maxwell 3D using the 2021 R1 release and open
-    the specified project, which is named ``mymaxwell2.aedt``.
+    the specified project, which is named ``myfile.aedt``.
 
-    >>> aedtapp = Maxwell3d(specified_version="2021.1", projectname="mymaxwell2.aedt")
-    pyaedt Info: Added design ...
+    >>> aedtapp = Maxwell3d(specified_version="2021.1", projectname="myfile.aedt")
 
     """
 
@@ -787,7 +781,7 @@ class Maxwell3d(Maxwell, FieldAnalysis3D, object):
 
 
 class Maxwell2d(Maxwell, FieldAnalysis2D, object):
-    """Provides the Maxwell 2D application interface.
+    """Maxwell 2D application interface.
 
     This class allows you to connect to an existing Maxwell 2D design or create a
     new Maxwell 2D design if one does not exist.
@@ -812,18 +806,18 @@ class Maxwell2d(Maxwell, FieldAnalysis2D, object):
         nothing is used.
     specified_version: str, optional
         Version of AEDT to use. The default is ``None``, in which case
-        the active version or latest installed version is used. This parameter is ignored when Script is launched within AEDT.
+        the active version or latest installed version is used.
     NG : bool, optional
         Whether to launch AEDT in the non-graphical mode. The default
-        is ``False``, in which case AEDT is launched in the graphical mode. This parameter is ignored when Script is launched within AEDT.
+        is ``False``, in which case AEDT is launched in the graphical mode.
     AlwaysNew : bool, optional
         Whether to launch an instance of AEDT in a new thread, even if
         another instance of the ``specified_version`` is active on the
-        machine. The default is ``True``. This parameter is ignored when Script is launched within AEDT.
+        machine. The default is ``True``.
     release_on_exit : bool, optional
         Whether to release AEDT on exit. The default is ``False``.
     student_version : bool, optional
-        Whether to open the AEDT student version. The default is ``False``. This parameter is ignored when Script is launched within AEDT.
+        Whether to open the AEDT student version. The default is ``False``.
 
     Examples
     --------
@@ -905,8 +899,7 @@ class Maxwell2d(Maxwell, FieldAnalysis2D, object):
             return obj
         solid_bodies = self.modeler.solid_bodies
         if objectfilter:
-            solid_ids = [i for i,j in self.modeler.primitives.object_id_dict.items()
-                                                                                   if j.name in objectfilter]
+            solid_ids = [i for i,j in self.modeler.primitives.object_id_dict.items() if j.name in objectfilter]
         else:
             solid_ids = [i for i in list(self.modeler.primitives.object_id_dict.keys())]
         model_depth = self.get_model_depth()
@@ -934,12 +927,12 @@ class Maxwell2d(Maxwell, FieldAnalysis2D, object):
     @aedt_exception_handler
     def read_design_data(self):
         """Read back the design data as a dictionary.
-
+        
         Returns
         -------
         dict
             Dictionary of design data.
-
+        
         """
         design_file = os.path.join(self.working_directory, "design_data.json")
         with open(design_file, 'r') as fps:
